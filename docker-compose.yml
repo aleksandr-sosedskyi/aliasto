@@ -43,9 +43,11 @@ services:
       - bot
 
   nginx:
-    restart: always
-    build: ./nginx/
+    build: ./nginx
     ports:
-      - "80:80"
-    links:
+      - 1300:80
+    volumes:
+      - static_volume:/home/app/microservice/static
+    depends_on:
       - web
+    restart: "on-failure"
