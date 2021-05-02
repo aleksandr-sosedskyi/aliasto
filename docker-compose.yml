@@ -33,9 +33,16 @@ services:
       dockerfile: ./server/Dockerfile
     volumes:
       - ./server/:/var/www/server
-    command: python3 manage.py runserver 0.0.0.0:8000
-    ports:
-      - ${SERVER_PORT}:${SERVER_PORT}
+    command: gunicorn shop.wsgi:application --bind 0.0.0.0:8000
+    expose:
+      - ${SERVER_PORT}
     depends_on:
       - postgres
       - bot
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - server
