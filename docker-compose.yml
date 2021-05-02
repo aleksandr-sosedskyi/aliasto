@@ -16,6 +16,7 @@ services:
   bot:
     container_name: shop_bot
     env_file: .env
+    restart: always
     build: .
     working_dir: /var/www/bot
     volumes:
@@ -24,9 +25,10 @@ services:
     depends_on: 
       - postgres
 
-  server:
+  web:
     container_name: shop_server
     env_file: .env
+    restart: always
     working_dir: /var/www/server
     build: 
       context: .
@@ -41,8 +43,9 @@ services:
       - bot
 
   nginx:
-    build: ./nginx
+    restart: always
+    build: ./nginx/
     ports:
-      - 1337:80
-    depends_on:
-      - server
+      - "80:80"
+    links:
+      - web
